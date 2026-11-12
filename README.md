@@ -1,5 +1,3 @@
-
-markdown
 # 🧠 CNN-ViT with Adaptive Attention for Medical Image Classification
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
@@ -9,7 +7,7 @@ markdown
 [![GitHub](https://img.shields.io/badge/GitHub-s--sohrab-181717?style=for-the-badge&logo=github)](https://github.com/s-sohrab)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-smd20-FFD21E?style=for-the-badge)](https://huggingface.co/smd20)
 
-> A lightweight, interpretable hybrid deep learning architecture combining **CNN** (local feature extraction) and **Vision Transformer (ViT)** (global dependency modeling) with a novel **Adaptive Attention** mechanism for medical image classification under limited data.
+> A lightweight, interpretable hybrid deep learning architecture combining **CNN** and **Vision Transformer (ViT)** with a novel **Adaptive Attention** mechanism for medical image classification under limited data.
 
 ---
 
@@ -28,13 +26,12 @@ Medical image classification under limited data remains a challenging problem du
 | ResNet-18 (SOTA baseline) | 97.13% | 89.53% | ~11.2M | 2.0 min |
 | **Ours (CNN-ViT + Adaptive)** | **97.89%** | **92.71%** | **~0.54M** | **0.1 min** |
 
-> 💡 **Insight:** The hybrid model outperforms both of its individual branches (+12% over Pure CNN, +11% over Pure ViT) and even surpasses ResNet-18 by **+3.18%**, proving that **Adaptive Attention is not merely additive — it is synergistic**.
+💡 **Insight:** The hybrid model outperforms both of its individual branches (+12% over Pure CNN, +11% over Pure ViT) and even surpasses ResNet-18 by **+3.18%**, proving that **Adaptive Attention is not merely additive — it is synergistic**.
 
 ---
 
 ## 🏗️ Architecture
 
-```text
 Input (1×28×28)
     │
     ├──→ CNN Branch (local features)
@@ -42,63 +39,70 @@ Input (1×28×28)
     │
     └──→ ViT Branch (global dependencies)
             └── Patch Embedding → Transformer Encoder × 2 → CLS token → 128-d
-    
+
     ↓
 Adaptive Attention (per-sample dynamic fusion)
     │   w_cnn, w_vit = Softmax(MLP([f_cnn ; f_vit]))
     │   f_fused = w_cnn · f_cnn + w_vit · f_vit
     ↓
 Classifier (FC → 11 classes)
-Innovations:
 
-Parallel CNN-ViT branches — capturing both local texture and global anatomy.
+**Innovations:**
 
-Adaptive Attention — per-sample, learnable weighting of branches (not static averaging).
+1. **Parallel CNN-ViT branches** — capturing both local texture and global anatomy.
+2. **Adaptive Attention** — per-sample, learnable weighting of branches (not static averaging).
+3. **Parameter efficiency** — only 0.54M parameters (20× smaller than ResNet-18).
+4. **Interpretability** — Grad-CAM confirms the model attends to anatomically meaningful regions (center-to-edge heat ratio = 1.23×).
 
-Parameter efficiency — only 0.54M parameters (20× smaller than ResNet-18).
+---
 
-Interpretability — Grad-CAM confirms the model attends to anatomically meaningful regions (center-to-edge heat ratio = 1.23×).
+## 📊 Interpretability (Grad-CAM)
 
-📊 Interpretability (Grad-CAM)
-Our model focuses on the organ of interest, not background noise:
+Our model focuses on the **organ of interest**, not background noise:
 
-Center-to-edge heat ratio: 1.23× (center > edges)
+- **Center-to-edge heat ratio:** 1.23× (center > edges)
+- **Correct predictions in visualized samples:** 12/12
+- **Attention distribution:** bimodal — the model learns to fully trust CNN or ViT per sample
 
-Correct predictions in visualized samples: 12/12
+![Grad-CAM](figures/gradcam_visualization.png)
 
-Attention distribution: bimodal — the model learns to fully trust CNN or ViT per sample
+---
 
-<p align="center"> <img src="figures/gradcam_visualization.png" width="80%" alt="Grad-CAM visualization"/> </p>
-🚀 Quick Start
-1. Installation
-bash
+## 🚀 Quick Start
+
+### 1. Installation
+
 git clone https://github.com/s-sohrab/cnn-vit-adaptive-medical.git
 cd cnn-vit-adaptive-medical
 pip install -r requirements.txt
-2. Training
-bash
+
+### 2. Training
+
 python src/train.py
-3. Evaluation
-bash
+
+### 3. Evaluation
+
 python src/evaluate.py
-4. Load Pretrained Model from HuggingFace
-python
+
+### 4. Load Pretrained Model from HuggingFace
+
 from huggingface_hub import hf_hub_download
 import torch
 from src.model import CNNViTAdaptive
 
-# Download weights
 weights_path = hf_hub_download(
     repo_id="smd20/cnn-vit-adaptive-medical",
     filename="cnn_vit_adaptive_best.pth"
 )
 
-# Load model
 model = CNNViTAdaptive(num_classes=11)
 model.load_state_dict(torch.load(weights_path, map_location="cpu"))
 model.eval()
-📁 Project Structure
-text
+
+---
+
+## 📁 Project Structure
+
 cnn-vit-adaptive-medical/
 ├── src/
 │   ├── model.py         # CNN-ViT + Adaptive Attention
@@ -112,20 +116,28 @@ cnn-vit-adaptive-medical/
 ├── requirements.txt
 ├── LICENSE
 └── README.md
-🔬 Reproducibility
-Item	Value
-Dataset	OrganAMNIST (28×28)
-Train / Val / Test	34,561 / 6,491 / 17,778
-Optimizer	AdamW (lr=1e-3, wd=1e-4)
-Scheduler	CosineAnnealingLR
-Epochs	10
-Batch size	128
-Hardware	NVIDIA T4 (Google Colab)
-Random seed	42
-📖 Citation
+
+---
+
+## 🔬 Reproducibility
+
+| Item | Value |
+|---|---|
+| Dataset | OrganAMNIST (28×28) |
+| Train / Val / Test | 34,561 / 6,491 / 17,778 |
+| Optimizer | AdamW (lr=1e-3, wd=1e-4) |
+| Scheduler | CosineAnnealingLR |
+| Epochs | 10 |
+| Batch size | 128 |
+| Hardware | NVIDIA T4 (Google Colab) |
+| Random seed | 42 |
+
+---
+
+## 📖 Citation
+
 If you find this work useful, please cite:
 
-bibtex
 @software{sohrab2025cnnvit,
   title  = {CNN-ViT with Adaptive Attention for Medical Image Classification},
   author = {Sohrab, S. M.},
@@ -133,29 +145,45 @@ bibtex
   url    = {https://github.com/s-sohrab/cnn-vit-adaptive-medical},
   note   = {Hybrid deep learning for OrganAMNIST}
 }
-🤝 Contributing
+
+---
+
+## 🤝 Contributing
+
 Contributions are welcome! Please open an issue or submit a pull request.
 
-📄 License
-This project is licensed under the MIT License — see LICENSE for details.
+---
 
-🙏 Acknowledgments
-MedMNIST — for the OrganAMNIST dataset
+## 📄 License
 
-PyTorch — deep learning framework
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
-Hugging Face — model hosting
+---
 
-Google Colab — free GPU
+## 🙏 Acknowledgments
 
-📬 Contact
-GitHub: @s-sohrab
+- [MedMNIST](https://medmnist.com/) — for the OrganAMNIST dataset
+- [PyTorch](https://pytorch.org/) — deep learning framework
+- [Hugging Face](https://huggingface.co/) — model hosting
+- [Google Colab](https://colab.research.google.com/) — free GPU
 
-HuggingFace: @smd20
+---
 
-<div align="center">
+## 📬 Contact
+
+- **GitHub:** [@s-sohrab](https://github.com/s-sohrab)
+- **HuggingFace:** [@smd20](https://huggingface.co/smd20)
+
+---
+
 ⭐ If you find this project useful, please consider giving it a star! ⭐
 
 Made with ❤️ for the medical AI community
 
-</div><!-- 🔖 Tags / Hashtags: #MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention #OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI #ImageClassification #HybridArchitecture #ExplainableAI #GradCAM #MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT -->
+<!--
+🔖 Tags / Hashtags:
+#MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention
+#OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI
+#ImageClassification #HybridArchitecture #ExplainableAI #GradCAM
+#MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT
+-->
