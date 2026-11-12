@@ -1,0 +1,43 @@
+
+# ============================================
+# CNN-ViT + Adaptive Attention Configuration
+# ============================================
+
+# ---------- Model ----------
+model:
+  name: "CNNViTAdaptive"
+  num_classes: 11
+  embed_dim: 128
+  cnn_out_dim: 128
+  vit:
+    img_size: 28
+    patch_size: 7
+    num_heads: 4
+    num_layers: 2
+    dropout: 0.1
+  classifier:
+    hidden_dim: 256
+    dropout: 0.3
+
+# ---------- Data ----------
+data:
+  name: "OrganAMNIST"
+  batch_size: 128
+  num_workers: 2
+  train_samples: 34561
+  val_samples: 6491
+  test_samples: 17778
+
+# ---------- Training ----------
+training:
+  epochs: 10
+  lr: 1e-3
+  weight_decay: 1e-4
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+
+# ---------- Results ----------
+results:
+  val_acc: 0.9789
+  test_acc: 0.9271
+  f1_macro: 0.9249

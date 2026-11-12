@@ -1,0 +1,22 @@
+{
+  "Pure CNN": {
+    "val_acc": 0.9376,
+    "test_acc": 0.8055,
+    "time_min": 0.6
+  },
+  "Pure ViT": {
+    "val_acc": 0.9505,
+    "test_acc": 0.8147,
+    "time_min": 1.6
+  },
+  "ResNet-18": {
+    "val_acc": 0.9713,
+    "test_acc": 0.8953,
+    "time_min": 2.0
+  },
+  "Ours (v1)": {
+    "val_acc": 0.9789,
+    "test_acc": 0.9271,
+    "time_min": 0.1
+  }
+}
