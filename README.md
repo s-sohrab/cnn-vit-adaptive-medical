@@ -1,10 +1,5 @@
-حتماً. یک README کاملاً حرفه‌ای، علمی و قابل استفاده برای گیت‌هاب می‌نویسم که هم هشتگ داشته باشد، هم توضیحات تخصصی و هم برای دیگران قابل استفاده باشد. کافیست محتوای زیر را در فایل `README.md` در پوشه پروژه‌تان (روی کامپیوتر) جایگزین کنید و با دستورات `git add .` و `git commit` و `git push` دوباره آپلود کنید.
 
----
-
-## 📄 محتوای کامل README.md (کپی کنید)
-
-```markdown
+markdown
 # 🧠 CNN-ViT with Adaptive Attention for Medical Image Classification
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
@@ -38,23 +33,22 @@ Medical image classification under limited data remains a challenging problem du
 ---
 
 ## 🏗️ Architecture
-
-```
 Input (1×28×28)
-    │
-    ├──→ CNN Branch (local features)
-    │       └── Conv Block × 3 → GAP → 128-d
-    │
-    └──→ ViT Branch (global dependencies)
-            └── Patch Embedding → Transformer Encoder × 2 → CLS token → 128-d
-    
-    ↓
+│
+├──→ CNN Branch (local features)
+│ └── Conv Block × 3 → GAP → 128-d
+│
+└──→ ViT Branch (global dependencies)
+└── Patch Embedding → Transformer Encoder × 2 → CLS token → 128-d
+
+↓
 Adaptive Attention (per-sample dynamic fusion)
-    │   w_cnn, w_vit = Softmax(MLP([f_cnn ; f_vit]))
-    │   f_fused = w_cnn · f_cnn + w_vit · f_vit
-    ↓
+│ w_cnn, w_vit = Softmax(MLP([f_cnn ; f_vit]))
+│ f_fused = w_cnn · f_cnn + w_vit · f_vit
+↓
 Classifier (FC → 11 classes)
-```
+
+text
 
 **Innovations:**
 1. **Parallel CNN-ViT branches** — capturing both local texture and global anatomy.
@@ -86,23 +80,14 @@ Our model focuses on the **organ of interest**, not background noise:
 git clone https://github.com/s-sohrab/cnn-vit-adaptive-medical.git
 cd cnn-vit-adaptive-medical
 pip install -r requirements.txt
-```
-
-### 2. Training
-
-```bash
+2. Training
+bash
 python src/train.py
-```
-
-### 3. Evaluation
-
-```bash
+3. Evaluation
+bash
 python src/evaluate.py
-```
-
-### 4. Load Pretrained Model from HuggingFace
-
-```python
+4. Load Pretrained Model from HuggingFace
+python
 from huggingface_hub import hf_hub_download
 import torch
 from src.model import CNNViTAdaptive
@@ -117,13 +102,8 @@ weights_path = hf_hub_download(
 model = CNNViTAdaptive(num_classes=11)
 model.load_state_dict(torch.load(weights_path, map_location="cpu"))
 model.eval()
-```
-
----
-
-## 📁 Project Structure
-
-```
+📁 Project Structure
+text
 cnn-vit-adaptive-medical/
 ├── src/
 │   ├── model.py         # CNN-ViT + Adaptive Attention
@@ -137,30 +117,20 @@ cnn-vit-adaptive-medical/
 ├── requirements.txt
 ├── LICENSE
 └── README.md
-```
-
----
-
-## 🔬 Reproducibility
-
-| Item | Value |
-|---|---|
-| Dataset | OrganAMNIST (28×28) |
-| Train / Val / Test | 34,561 / 6,491 / 17,778 |
-| Optimizer | AdamW (lr=1e-3, wd=1e-4) |
-| Scheduler | CosineAnnealingLR |
-| Epochs | 10 |
-| Batch size | 128 |
-| Hardware | NVIDIA T4 (Google Colab) |
-| Random seed | 42 |
-
----
-
-## 📖 Citation
-
+🔬 Reproducibility
+Item	Value
+Dataset	OrganAMNIST (28×28)
+Train / Val / Test	34,561 / 6,491 / 17,778
+Optimizer	AdamW (lr=1e-3, wd=1e-4)
+Scheduler	CosineAnnealingLR
+Epochs	10
+Batch size	128
+Hardware	NVIDIA T4 (Google Colab)
+Random seed	42
+📖 Citation
 If you find this work useful, please cite:
 
-```bibtex
+bibtex
 @software{sohrab2025cnnvit,
   title  = {CNN-ViT with Adaptive Attention for Medical Image Classification},
   author = {Sohrab, S. M.},
@@ -168,85 +138,30 @@ If you find this work useful, please cite:
   url    = {https://github.com/s-sohrab/cnn-vit-adaptive-medical},
   note   = {Hybrid deep learning for OrganAMNIST}
 }
-```
-
----
-
-## 🤝 Contributing
-
+🤝 Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 
----
+📄 License
+This project is licensed under the MIT License — see LICENSE for details.
 
-## 📄 License
+🙏 Acknowledgments
+MedMNIST — for the OrganAMNIST dataset
 
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+PyTorch — deep learning framework
 
----
+Hugging Face — model hosting
 
-## 🙏 Acknowledgments
+Google Colab — free GPU
 
-- [MedMNIST](https://medmnist.com/) — for the OrganAMNIST dataset
-- [PyTorch](https://pytorch.org/) — deep learning framework
-- [Hugging Face](https://huggingface.co/) — model hosting
-- [Google Colab](https://colab.research.google.com/) — free GPU
+📬 Contact
+GitHub: @s-sohrab
 
----
-
-## 📬 Contact
-
-- **GitHub:** [@s-sohrab](https://github.com/s-sohrab)
-- **HuggingFace:** [@smd20](https://huggingface.co/smd20)
-
----
+HuggingFace: @smd20
 
 <div align="center">
-
-**⭐ If you find this project useful, please consider giving it a star! ⭐**
+⭐ If you find this project useful, please consider giving it a star! ⭐
 
 Made with ❤️ for the medical AI community
 
 </div>
-
----
-
-<!-- 
-🔖 Tags / Hashtags:
-#MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention 
-#OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI 
-#ImageClassification #HybridArchitecture #ExplainableAI #GradCAM 
-#MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT
--->
-```
-
----
-
-## 📖 این README چه ویژگی‌هایی دارد؟ (به زبان ساده)
-
-این README یک **صفحه حرفه‌ای** برای پروژه شماست که:
-
-1. **Badgeهای رنگی** بالای صفحه دارد (Python، PyTorch، MedMNIST، License، GitHub، HuggingFace) — همان چیزی که در پروژه‌های معتبر می‌بینید.
-2. **Abstract علمی** دارد — خلاصه‌ای از مقاله که هر داور یا پژوهشگر را جذب می‌کند.
-3. **جدول نتایج** با اعداد دقیق شما (۹۲.۷۱٪) و مقایسه با Baselineها.
-4. **معماری به‌صورت ASCII** — خوانا و قابل فهم.
-5. **بخش تفسیرپذیری** با Grad-CAM و تصویر.
-6. **دستورات Quick Start** — هر کسی با ۳ خط می‌تواند پروژه را اجرا کند.
-7. **Citation (BibTeX)** — برای استفاده در مقالات دیگر.
-8. **هشتگ‌ها** در انتهای فایل (به‌صورت کامنت) — برای جستجوی بهتر در گیت‌هاب.
-9. **لینک‌های تماس** با گیت‌هاب و هاگینگ‌فیس شما.
-
----
-
-## 📋 قدم بعدی: جایگزینی و آپلود
-
-۱. فایل `README.md` روی کامپیوترتان را باز کنید (در پوشه `cnn-vit-adaptive-medical`).
-۲. **کل محتوا را پاک کنید** و متن بالا را جایگزین کنید.
-۳. ذخیره کنید.
-۴. در CMD (در همان مسیر پروژه) این دستورات را بزنید:
-
-```cmd
-git add README.md
-git commit -m "docs: professional README with badges, results, and citation"
-git push
-```
-
+<!-- 🔖 Tags / Hashtags: #MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention #OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI #ImageClassification #HybridArchitecture #ExplainableAI #GradCAM #MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT -->
