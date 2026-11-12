@@ -33,50 +33,45 @@ Medical image classification under limited data remains a challenging problem du
 ---
 
 ## 🏗️ Architecture
+
+```text
 Input (1×28×28)
-│
-├──→ CNN Branch (local features)
-│ └── Conv Block × 3 → GAP → 128-d
-│
-└──→ ViT Branch (global dependencies)
-└── Patch Embedding → Transformer Encoder × 2 → CLS token → 128-d
-
-↓
+    │
+    ├──→ CNN Branch (local features)
+    │       └── Conv Block × 3 → GAP → 128-d
+    │
+    └──→ ViT Branch (global dependencies)
+            └── Patch Embedding → Transformer Encoder × 2 → CLS token → 128-d
+    
+    ↓
 Adaptive Attention (per-sample dynamic fusion)
-│ w_cnn, w_vit = Softmax(MLP([f_cnn ; f_vit]))
-│ f_fused = w_cnn · f_cnn + w_vit · f_vit
-↓
+    │   w_cnn, w_vit = Softmax(MLP([f_cnn ; f_vit]))
+    │   f_fused = w_cnn · f_cnn + w_vit · f_vit
+    ↓
 Classifier (FC → 11 classes)
+Innovations:
 
-text
+Parallel CNN-ViT branches — capturing both local texture and global anatomy.
 
-**Innovations:**
-1. **Parallel CNN-ViT branches** — capturing both local texture and global anatomy.
-2. **Adaptive Attention** — per-sample, learnable weighting of branches (not static averaging).
-3. **Parameter efficiency** — only 0.54M parameters (20× smaller than ResNet-18).
-4. **Interpretability** — Grad-CAM confirms the model attends to anatomically meaningful regions (center-to-edge heat ratio = 1.23×).
+Adaptive Attention — per-sample, learnable weighting of branches (not static averaging).
 
----
+Parameter efficiency — only 0.54M parameters (20× smaller than ResNet-18).
 
-## 📊 Interpretability (Grad-CAM)
+Interpretability — Grad-CAM confirms the model attends to anatomically meaningful regions (center-to-edge heat ratio = 1.23×).
 
-Our model focuses on the **organ of interest**, not background noise:
+📊 Interpretability (Grad-CAM)
+Our model focuses on the organ of interest, not background noise:
 
-- **Center-to-edge heat ratio:** 1.23× (center > edges)
-- **Correct predictions in visualized samples:** 12/12
-- **Attention distribution:** bimodal — the model learns to fully trust CNN or ViT per sample
+Center-to-edge heat ratio: 1.23× (center > edges)
 
-<p align="center">
-  <img src="figures/gradcam_visualization.png" width="80%" alt="Grad-CAM visualization"/>
-</p>
+Correct predictions in visualized samples: 12/12
 
----
+Attention distribution: bimodal — the model learns to fully trust CNN or ViT per sample
 
-## 🚀 Quick Start
-
-### 1. Installation
-
-```bash
+<p align="center"> <img src="figures/gradcam_visualization.png" width="80%" alt="Grad-CAM visualization"/> </p>
+🚀 Quick Start
+1. Installation
+bash
 git clone https://github.com/s-sohrab/cnn-vit-adaptive-medical.git
 cd cnn-vit-adaptive-medical
 pip install -r requirements.txt
@@ -163,5 +158,4 @@ HuggingFace: @smd20
 
 Made with ❤️ for the medical AI community
 
-</div>
-<!-- 🔖 Tags / Hashtags: #MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention #OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI #ImageClassification #HybridArchitecture #ExplainableAI #GradCAM #MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT -->
+</div><!-- 🔖 Tags / Hashtags: #MedicalImaging #DeepLearning #VisionTransformer #CNN #AdaptiveAttention #OrganAMNIST #MedMNIST #PyTorch #ComputerVision #HealthcareAI #ImageClassification #HybridArchitecture #ExplainableAI #GradCAM #MachineLearning #AIinMedicine #MedicalAI #Transformers #CNNViT -->
